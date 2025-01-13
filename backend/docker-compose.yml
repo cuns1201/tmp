@@ -1,0 +1,37 @@
+services:
+  db:
+    image: postgres
+    environment:
+      - POSTGRES_PASSWORD=123456
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=postgres
+    ports:
+      - '5432:5432'
+  frontend:
+    image: my_frontend
+    environment:
+      - BACKEND_URL=http://localhost:3000/v1
+      - GG_CLIENT_ID=669935704831-l3b2tmvde6esb62gulin3eusrj32mqca.apps.googleusercontent.com
+    ports:
+      - '4000:4000'
+  amdin:
+    image: my_admin
+    environment:
+      - HOME_NAME=http://localhost:3000
+    ports:
+      - '5000:5000'
+  backend:
+    image: my_backend
+    environment:
+      - DATABASE_URL=postgresql://postgres:123456@db:5432/postgres?sslmode=disable&schema=public
+      - GG_ID=669935704831-l3b2tmvde6esb62gulin3eusrj32mqca.apps.googleusercontent.com
+      - PORT=3000
+      - JWT_SECRET=thisisasamplesecret
+      - JWT_ACCESS_EXPIRATION_MINUTES=30
+      - JWT_REFRESH_EXPIRATION_DAYS=30
+      - JWT_RESET_PASSWORD_EXPIRATION_MINUTES=10
+      - JWT_VERIFY_EMAIL_EXPIRATION_MINUTES=10
+    ports:
+      - '3000:3000'
+    depends_on:
+      - db

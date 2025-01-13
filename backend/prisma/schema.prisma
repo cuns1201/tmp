@@ -1,0 +1,95 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextIndex", "fullTextSearch"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model users {
+  id                String             @id(map: "user_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  boid              String?            @db.Uuid
+  email             String             @unique(map: "users_un") @db.VarChar(255)
+  role              Int?               @default(2) @db.SmallInt
+  password          Bytes?
+  create_time       DateTime?          @default(now()) @db.Timestamptz(6)
+  update_time       DateTime?          @default(now()) @db.Timestamptz(6)
+  verification      Boolean?
+  ggid              String?
+  bus_tickets       bus_tickets[]
+  reviews           reviews[]
+  user_verification user_verification?
+  bus_operators     bus_operators?     @relation(fields: [boid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "users_bus_operators_fk")
+}
+
+model bus_operators {
+  id        String    @id(map: "bus_operator_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  image_url String?
+  phone     String?
+  name      String
+  buses     buses[]
+  reviews   reviews[]
+  users     users[]
+
+  @@index([name])
+}
+
+model bus_stations {
+  id                                    String  @id(map: "bus_station_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name                                  String
+  location                              String
+  buses_buses_start_pointTobus_stations buses[] @relation("buses_start_pointTobus_stations")
+  buses_buses_end_pointTobus_stations   buses[] @relation("buses_end_pointTobus_stations")
+  
+  @@index([location])
+}
+
+model bus_tickets {
+  id      String @id(map: "bus_tickets_pk") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name    String
+  phone   String
+  seat    String
+  bus_id  String @db.Uuid
+  user_id String @db.Uuid
+  status  Int    @default(0) @db.SmallInt
+  buses   buses  @relation(fields: [bus_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "bus_tickets_buses_fk")
+  users   users  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "bus_tickets_users_fk")
+}
+
+model buses {
+  id                                           String        @id(map: "buses_pk_1") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bo_id                                        String        @db.Uuid
+  start_point                                  String        @db.Uuid
+  end_point                                    String        @db.Uuid
+  type                                         Int           @db.SmallInt
+  start_time                                   DateTime      @db.Timestamptz(6)
+  end_time                                     DateTime      @db.Timestamptz(6)
+  image_url                                    String
+  policy                                       String?
+  num_of_seats                                 Int           @db.SmallInt
+  price                                        Int
+  bus_operators                                bus_operators @relation(fields: [bo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "buses_bus_operators_fk")
+  bus_stations_buses_end_pointTobus_stations   bus_stations  @relation("buses_end_pointTobus_stations", fields: [end_point], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "buses_bus_stations_fk_1")
+  bus_stations_buses_start_pointTobus_stations bus_stations  @relation("buses_start_pointTobus_stations", fields: [start_point], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "buses_bus_stations_fk")
+  bus_tickets                                  bus_tickets[]
+  
+  @@index([price])
+}
+
+model reviews {
+  id            String        @id(map: "reviews_pk_1") @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  comment       String
+  rate          Int           @db.SmallInt
+  bo_id         String        @db.Uuid
+  user_id       String        @db.Uuid
+  bus_operators bus_operators @relation(fields: [bo_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "reviews_bus_operators_fk")
+  users         users         @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "reviews_users_fk")
+}
+
+model user_verification {
+  uid   String  @id(map: "user_verification_pk") @db.Uuid
+  code  String  @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  users users   @relation(fields: [uid], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "user_verification_users_fk")
+}
