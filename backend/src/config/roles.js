@@ -1,5 +1,5 @@
 const allRoles = {
-  user: ['createTicket', 'seeHistory', 'createReview', 'printTicket', 'discardTicket', 'payTicket'],
+  user: ['createTicket', 'seeHistory', 'createReview', 'printTicket', 'discardTicket', 'payTicket', 'getTicket'],
 
   bus_operator: [
     'bookingList',

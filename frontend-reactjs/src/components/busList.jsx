@@ -2,6 +2,7 @@ import Select from "react-select";
 import { useEffect, useState } from "react";
 
 import BusTicket from "./busTicket.jsx";
+import Search from "./search.jsx";
 // import BusDetail from "./busDetail.jsx";
 // import Card from "react-bootstrap/Card";
 import '../index.css';
@@ -257,6 +258,9 @@ const BusList = () => {
 
   return (
     <>
+      <div>
+        <Search />
+      </div>
       <div className="flex mt-5 row">
         <div className="col-3">
           <div className="card">

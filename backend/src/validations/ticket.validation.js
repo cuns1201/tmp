@@ -12,6 +12,12 @@ const createTicket = {
   }),
 };
 
+const getTicket = {
+  body: Joi.object().keys({
+    tid: Joi.string().uuid().required(),
+  }),
+};
+
 const printTicket = {
   body: Joi.object().keys({
     bus_id: Joi.string().uuid().required(),
@@ -33,6 +39,7 @@ const payTicket = {
 module.exports = {
   discardTicket,
   createTicket,
+  getTicket,
   printTicket,
   payTicket,
 };

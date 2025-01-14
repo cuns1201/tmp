@@ -44,6 +44,14 @@ const payTicket = async (ticketIds) => {
   return { message: 'Pay ticket successfully' };
 };
 
+const getTicketById = async (tid) => {
+  return prisma.bus_tickets.findUnique({
+    where: {
+      id: tid,
+    },
+  });
+};
+
 const createTicketByNumOfSeats = async (email, userId, busId, name, phone, numOfSeats) => {
   console.log('email', email);
   const checkBusIDExist = await prisma.buses.findUnique({
@@ -513,6 +521,7 @@ const discardTicket = async (req) => {
 module.exports = {
   discardTicket,
   createTicketByNumOfSeats,
+  getTicketById,
   getTicketByBusIdAndUserId,
   payTicket,
 };

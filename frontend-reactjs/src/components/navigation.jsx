@@ -7,13 +7,14 @@ import {
 import { useEffect, useState } from "react";
 // import LoginForm from './loginForm.jsx';
 // import UnsplashPhotos from "./infiniteScroll.jsx";
-import Profile from "./profile.jsx";
+import History from "./history.jsx";
 import OTPInput from "./otp.jsx";
 import HomePage from "./home.jsx";
 import LoginForm from "./loginForm.jsx";
 import BusList from "./busList.jsx";
 import FillForm from "./fill-form.jsx";
 import BusDetail from "./busDetail.jsx";
+import TicketDetail from "./ticketDetail.jsx";
 
 const Navigation = () => {
   const [isLogIn, setIsLogIn] = useState(false);
@@ -54,11 +55,11 @@ const Navigation = () => {
             </a>
             <div className="flex flex-row">
               <NavLink
-                to={`${isLogIn ? "/profile" : "/login"}`}
+                to={`${isLogIn ? "/history" : "/login"}`}
                 className="block ml-7 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0 dark:text-white md:dark:text-blue-500"
                 aria-current="page"
               >
-                {isLogIn ? "Profile" : "Log In"}
+                {isLogIn ? "History" : "Log In"}
               </NavLink>
               {isLogIn ? (
                 <NavLink
@@ -79,11 +80,12 @@ const Navigation = () => {
           <Routes>
             <Route exact path="/" element={<HomePage />} />
             <Route exact path="/login" element={<LoginForm />} />
-            <Route exact path="/profile" element={<Profile />} />
+            <Route exact path="/history" element={<History />} />
             <Route exact path="/otp" element={<OTPInput />} />
             <Route exact path="/list" element={<BusList />} />
             <Route exact path="/fill-form" element={<FillForm />} />
             <Route exact path="/bus-detail" element={<BusDetail />} />
+            <Route exact path="/ticket-detail" element={<TicketDetail />} />
           </Routes>
         </div>
       </BrowserRouter>

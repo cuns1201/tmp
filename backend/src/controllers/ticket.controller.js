@@ -17,6 +17,12 @@ const createTicket = catchAsync(async (req, res) => {
   res.send(result);
 });
 
+const getTicket = catchAsync(async (req, res) => {
+  console.log('getTicket', req.body.tid);
+  const result = await ticketService.getTicketById(req.body.tid);
+  res.send(result);
+});
+
 const payTicket = catchAsync(async (req, res) => {
   const result = await ticketService.payTicket(req.body.ticket_ids);
   res.send(result);
@@ -72,6 +78,7 @@ const discardTicket = catchAsync(async (req, res) => {
 module.exports = {
   discardTicket,
   createTicket,
+  getTicket,
   printTicket,
   payTicket,
 };
