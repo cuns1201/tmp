@@ -49,8 +49,8 @@ const History = () => {
     return (
       <>
         <div className="history-list">
-          <div className="h1 text-center">Booking history</div>
-          <div id="hList" className="">
+          <div className="titleHis">Booking history</div>
+          <div id="hList" className="bodyHis">
             <div className="table-responsive">
               <table id="history-list" className="table table-striped mt-5">
                 <thead>
@@ -91,7 +91,7 @@ const History = () => {
             </div>
             <div className="d-grid gap-2 col-3 mx-auto">
               <a
-                className="btn btn-outline-primary float-center"
+                className="btnFillFom"
                 id="load-more"
                 onClick={() => loadMore()}
               >

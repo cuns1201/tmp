@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
 const HistoryDetail = () => {
   var typeOfBus = ["Limousine", "Normal Seat", "Sleeper Bus"];
@@ -21,35 +21,28 @@ const HistoryDetail = () => {
     return decodeURI(results[1]) || 0;
   }
 
-  // function canDiscard() {
-  //     let currentDate = new Date();
-
-  //     if (Date.parse(currentDate) < Date.parse(detailTicket.buses.start_time) && detailTicket.status != 2) {
-  //         isDiscard = true;
-  //     } else {
-  //         isDiscard = false;
-  //     }
-  // }
-
   useEffect(() => {
-      const fetchDetail = async () => {
-          let response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ticket/get-ticket`, {
-              method: "POST",
-              headers: {
-                  Accept: "application/json",
-                  "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify({
-                  tid,
-              }),
-          });
-          
-          response = await response.json();
-          setDetailTicket(response);
-      };
-  
-      fetchDetail();
+    const fetchDetail = async () => {
+      let response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/ticket/get-ticket`,
+        {
+          method: "POST",
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            tid,
+          }),
+        }
+      );
+
+      response = await response.json();
+      setDetailTicket(response);
+    };
+
+    fetchDetail();
   }, []);
 
   useEffect(() => {
@@ -74,37 +67,40 @@ const HistoryDetail = () => {
 
   const handleDiscard = async () => {
     try {
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/ticket/discard-ticket`, {
-        method: 'POST',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({ tid }),
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URL}/ticket/discard-ticket`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({ tid }),
+        }
+      );
 
       if (response.ok) {
         const data = await response.json();
         console.log(data);
-        alert('Discard success');
+        alert("Discard success");
         setDetailTicket((prevDetailTicket) => ({
           ...prevDetailTicket,
           status: 2,
         }));
       } else {
         const errorData = await response.json();
-        console.error('Error:', errorData);
+        console.error("Error:", errorData);
       }
     } catch (error) {
-      console.error('Error:', error);
+      console.error("Error:", error);
     }
   };
 
   return (
     <>
-      <div className="detail d-none" id="detail">
-        <div className="h1 text-center">Detail Ticket</div>
+      <div className="detail d-none history-list" id="detail">
+        <div className="titleHis">Detail Ticket</div>
         <table className="table table-hover table-striped" id="detail-ticket">
           <tbody>
             <tr style={{ minHeight: "50px" }}>
@@ -178,17 +174,17 @@ const HistoryDetail = () => {
             </tr>
           </tbody>
         </table>
-        <div className="mt-5 row justify-content-center align-items-center">
+        <div className="listBTN">
           <button
             type="button"
-            className="col-md-3 col-6 btn btn-primary py-3 px-4 my-4"
+            className="btnShowForm"
             onClick={() => navigate("/history")}
           >
             Back
           </button>
           <button
             type="button"
-            className="col-md-3 col-6 btn btn-primary py-3 px-4 mx-4 d-none"
+            className="btnShowForm"
             id="discard"
             style={{ display: isDiscard ? "block" : "none" }}
             onClick={() => handleDiscard()}
