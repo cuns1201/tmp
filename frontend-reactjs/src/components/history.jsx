@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 const History = () => {
     // var page = 0;
     var limit = 5;
-    var typeOfBus = ["Limousine", "Normal Seat", "Sleeper Bus"];
-    var statusBook = ["Just booked", "Booked", "Canceled payment"];
     var userInfo = JSON.parse(localStorage.getItem("userInfo"));
     var token = userInfo?.token?.token;
     var uid = userInfo?.user?.id;
@@ -44,13 +42,14 @@ const History = () => {
     }, []);
 
     const handleViewDetail = (id) => {
-        window.location.href = "/ticket-detail?tid=" + id;
+      console.log("View detail", currentHistoryData);
+        window.location.href = "/history-detail?tid=" + id;
     };
 
     return (
       <>
         <div className="history-list">
-          <div className="h1 text-center">Vexere history</div>
+          <div className="h1 text-center">Booking history</div>
           <div id="hList" className="">
             <div className="table-responsive">
               <table id="history-list" className="table table-striped mt-5">

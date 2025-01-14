@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
-import Detail from "./detail.jsx";
+import { BiStar } from "react-icons/bi";
+import { FaStar } from "react-icons/fa6";
 
 function secondsToHms(d) {
   d = Number(d);
@@ -26,10 +27,13 @@ function getUrlParameter(name) {
 const BusDetail = () => {
   const [isOperator, setIsOperator] = useState(true);
   const [userComment, setUserComment] = useState("");
-  var dataOperator = [];
+  var [dataOperator, setDataOperator] = useState({});
   var maxCommentNum = null;
   var commentPage = 0;
   var commentLimit = 2;
+  var userRating = 1;
+  const typeName = ["Limousine", "Normal Seat", "Sleeper Bus"];
+
   const id = getUrlParameter("bus-operator");
   const averRating = getUrlParameter("averRating");
 
@@ -42,37 +46,27 @@ const BusDetail = () => {
     return star;
   }
 
-  function generateComment(bo_id) {
+  async function generateComment(bo_id) {
     const commentHTMLTemplate = (email, star, comment) => `
       <hr />
       <div className='clearfix'>
         <i className='float-start fs-1 bi bi-person-fill fa-5x me-1'></i>
         <div className='float-start'>
-        <div className='fw-bolder'>${email}</div>
-        <div>${star}</div>
-        <p className='fw-light fst-italic'>${comment}</p>
+          <div className='fw-bolder'>${email}</div>
+          <div>${star}</div>
+          <p className='fw-light fst-italic'>${comment}</p>
         </div>
       </div>`;
 
     let commentContent = "";
-    let userInfo = JSON.parse(localStorage.getItem("userInfo"));
-    fetch(
-      `${
+    try {
+      let response = await fetch(`${
         import.meta.env.VITE_BACKEND_URL
-      }/bus-operator/review/${bo_id}/${commentPage}/${commentLimit}`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${userInfo.token.token}`,
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-      }
-    )
-    .then(response => response.json())
-    .then(data => {
-      if (maxCommentNum == null || maxCommentNum < data.count)
+      }/bus-operator/review/${bo_id}/${commentPage}/${commentLimit}`);
+      let data = await response.json();
+      if (maxCommentNum == null || maxCommentNum < data.count){
         maxCommentNum = data.count;
+      }
       if (data.data.length > 0) {
         data.data.forEach(item => {
           commentContent += commentHTMLTemplate(
@@ -82,11 +76,44 @@ const BusDetail = () => {
           );
         });
       }
-    })
-    .catch(error => {
+    } catch (error) {
       alert("Error", JSON.stringify(error));
-    });
+    }
+    
+    // fetch(
+    //   `${
+    //     import.meta.env.VITE_BACKEND_URL
+    //   }/bus-operator/review/${bo_id}/${commentPage}/${commentLimit}`,
+    //   {
+    //     method: "GET",
+    //     headers: {
+    //       Authorization: `Bearer`,
+    //       "Content-Type": "application/json",
+    //       Accept: "application/json",
+    //     },
+    //   }
+    // )
+    // .then(response => response.json())
+    // .then(data => {
+    //   if (maxCommentNum == null || maxCommentNum < data.count){
+    //     maxCommentNum = data.count;
+    //   }
+    //   if (data.data.length > 0) {
+    //     data.data.forEach(item => {
+    //       commentContent += commentHTMLTemplate(
+    //         item.users.email,
+    //         generateStart(item.rate),
+    //         item.comment
+    //       );
+    //     });
 
+    //   }
+    // })
+    // .catch(error => {
+    //   alert("Error", JSON.stringify(error));
+    // });
+
+    console.log("commentContent: ", commentContent);
     return commentContent;
   }
 
@@ -222,28 +249,92 @@ const BusDetail = () => {
         const data = await response.json();
         const userComment = generateComment(data.bus_operators.id);
         setUserComment(userComment);
-        dataOperator = data;
+        setDataOperator(data);
       } catch (error) {
         console.error("Error:", error);
       }
-
-      console.log("dataasd: ", dataOperator);
-      // fetch(`${import.meta.env.VITE_BACKEND_URL}/bus/${id}`)
-      // .then(response => response.json())
-      // .then(data => {
-      //   const userComment = generateComment(data.bus_operators.id);
-      //   dataOperator = JSON.parse(data);
-      //   console.log("dataasd: ", dataOperator.bus_operators.name);
-      //   setUserComment(userComment);
-      //   // const html = template(data, userComment);
-      // })
-      // .catch(error => {
-      //   console.error("Error:", error);
-      // });
     };
 
     getDataOperator();
   }, []);
+
+  useEffect(() => {
+    if (Object.keys(dataOperator).length > 0) {
+      generateComment(dataOperator.bus_operators?.id).then(commentContent => {
+        document.getElementById("user_comment").innerHTML = commentContent;
+      })
+      .catch(error => {
+        console.error("Error generating comment:", error);
+      });
+    }
+  }, [dataOperator]);
+
+  const handleSwitch = (bool) => {
+    bool ? setIsOperator(true) : setIsOperator(false);
+  };
+  const handleSubmitComment = id => {
+    const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+    fetch(
+      `${import.meta.env.VITE_BACKEND_URL}/bus-operator/review/create/${id}`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${userInfo.token.token}`,
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+        body: JSON.stringify({
+          comment: document.getElementById("floatingTextarea2").value,
+          rate: userRating,
+        }),
+      }
+    )
+      .then(response => response.json())
+      .then(data => {
+        console.log("dataReview: ", data);
+        document.getElementById("floatingTextarea2").value = "";
+        alert("Success");
+      })
+      .catch(error => {
+        alert("Error", JSON.stringify(error));
+      });
+  };
+  const handlePrevious = id => {
+    if (commentPage > 0) {
+      commentPage--;
+      generateComment(id)
+        .then(commentContent => {
+          document.getElementById("user_comment").innerHTML = commentContent;
+        })
+        .catch(error => {
+          console.error("Error generating comment:", error);
+        });
+    }
+  };
+  const handleNext = id => {
+    if (commentPage < Math.floor(maxCommentNum / commentLimit) - 1) {
+      commentPage++;
+      generateComment(id)
+        .then(commentContent => {
+          document.getElementById("user_comment").innerHTML = commentContent;
+        })
+        .catch(error => {
+          console.error("Error generating comment:", error);
+        });
+    }
+  };
+  function displayAndStoreUserRating(starID) {
+    const stars = document.querySelectorAll("#rating .bi");
+    stars.forEach((star, index) => {
+      if (index < starID) {
+        star.classList.add("bi-star-fill");
+        star.classList.remove("bi-star");
+      } else {
+        star.classList.add("bi-star");
+        star.classList.remove("bi-star-fill");
+      }
+    });
+  }
 
   return (
     <div className="card">
@@ -260,7 +351,7 @@ const BusDetail = () => {
                 role="tab"
                 aria-controls="pills-bus-operator"
                 aria-selected="true"
-                onClick={() => setIsOperator(true)}
+                onClick={() => handleSwitch(true)}
               >
                 Bus operator
               </button>
@@ -275,7 +366,7 @@ const BusDetail = () => {
                 role="tab"
                 aria-controls="pills-bus-information"
                 aria-selected="false"
-                onClick={() => setIsOperator(false)}
+                onClick={() => handleSwitch(false)}
               >
                 Bus information
               </button>
@@ -285,8 +376,7 @@ const BusDetail = () => {
         <button type="button" className="btn-close" aria-label="Close"></button>
       </div>
       <div className="card-body">
-        <Detail isOperator={isOperator} dataOperator={dataOperator} averRating={averRating} userComment={userComment} />
-        {/* <div
+        <div
           className="tab-content"
           id="pills-tabContent"
           style={{ display: isOperator ? "block" : "none" }}
@@ -299,19 +389,19 @@ const BusDetail = () => {
           >
             <div className="p-4 col">
               <div className="h3 text-center mw-50">
-                Nhà xe {dataOperator.bus_operators.name}
+                Nhà xe {dataOperator.bus_operators?.name}
               </div>
               <div className="d-flex justify-content-center">
                 <img
                   className="img-fluid"
-                  src={dataOperator.bus_operators.image_url}
+                  src={dataOperator.bus_operators?.image_url}
                   alt="Nhà xe"
                 />
               </div>
               <div>
                 <span className="fst-italic fw-lighter"> Phone number: </span>
                 <span className="fw-bolder">
-                  {dataOperator.bus_operators.phone}
+                  {dataOperator.bus_operators?.phone}
                 </span>
                 <span className="float-end">
                   <span className="badge rounded-pill bg-warning text-dark">
@@ -320,7 +410,7 @@ const BusDetail = () => {
                   </span>
                 </span>
               </div>
-              <div id="user_comment">{userComment}</div>
+              <div id="user_comment"></div>
               <nav className="mt-5" aria-label="Page navigation example">
                 <ul className="pagination justify-content-center">
                   <li className="page-item">
@@ -329,7 +419,7 @@ const BusDetail = () => {
                       className="page-link"
                       id="Previous"
                       onClick={() =>
-                        handlePrevious(dataOperator.bus_operators.id)
+                        handlePrevious(dataOperator.bus_operators?.id)
                       }
                     >
                       Previous
@@ -340,7 +430,7 @@ const BusDetail = () => {
                       type="button"
                       className="page-link"
                       id="Next"
-                      onClick={() => handleNext(dataOperator.bus_operators.id)}
+                      onClick={() => handleNext(dataOperator.bus_operators?.id)}
                     >
                       Next
                     </button>
@@ -352,43 +442,58 @@ const BusDetail = () => {
                 <div className="form-floating">
                   <textarea
                     className="form-control"
-                    placeholder="Leave a comment here"
+                    placeholder="Your Comments"
                     id="floatingTextarea2"
-                    style="height: 150px; resize: none"
+                    style={{ height: "150px", resize: "none" }}
                     required
                   ></textarea>
-                  <label className="text-muted">Your Comments.</label>
                 </div>
-                <div>
-                  <span className="float-start" id="rating">
+                <div className="mb-3 flex justify-center">
+                  <span className="float-start flex items-center" id="rating">
                     <i
-                      className="btn text-warning bi bi-star-fill"
+                      className="btn text-warning"
                       id="1"
                       onClick={() => displayAndStoreUserRating(1)}
-                    ></i>
+                    >
+                      <FaStar />
+                    </i>
                     <i
-                      className="btn text-warning bi bi-star"
+                      className="btn text-warning"
                       id="2"
                       onClick={() => displayAndStoreUserRating(2)}
-                    ></i>
+                    >
+                      <BiStar />
+                    </i>
                     <i
                       className="btn text-warning bi bi-star"
                       id="3"
                       onClick={() => displayAndStoreUserRating(3)}
-                    ></i>
+                    >
+                      <BiStar />
+                    </i>
                     <i
                       className="btn text-warning bi bi-star"
                       id="4"
                       onClick={() => displayAndStoreUserRating(4)}
-                    ></i>
+                    >
+                      <BiStar />
+                    </i>
                     <i
                       className="btn text-warning bi bi-star"
                       id="5"
                       onClick={() => displayAndStoreUserRating(5)}
-                    ></i>
+                    >
+                      <BiStar />
+                    </i>
                   </span>
-                  <span className="float-end">
-                    <button type="button" onClick={() => handleSubmitComment(dataOperator.bus_operators.id)} className="btn btn-primary mb-3">
+                  <span className="float-end flex items-center">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        handleSubmitComment(dataOperator.bus_operators?.id)
+                      }
+                      className="btn btn-primary"
+                    >
                       Submit
                     </button>
                   </span>
@@ -408,23 +513,29 @@ const BusDetail = () => {
           <div className="p-4 col">
             <table className="table table-borderless">
               <tr>
-                <td className="fst-italic" style="width: 60%">
+                <td className="fst-italic" style={{ width: "60%" }}>
                   Bus operator
                 </td>
                 <td className="text-primary">
-                  {dataOperator.bus_operators.name}
+                  {dataOperator.bus_operators?.name}
                 </td>
               </tr>
               <tr>
                 <td className="fst-italic">Start point</td>
                 <td className="text-primary">
-                  {dataOperator.bus_stations_buses_start_pointTobus_stations.name}
+                  {
+                    dataOperator.bus_stations_buses_start_pointTobus_stations
+                      ?.name
+                  }
                 </td>
               </tr>
               <tr>
                 <td className="fst-italic">End point</td>
                 <td className="text-primary">
-                  {dataOperator.bus_stations_buses_end_pointTobus_stations.name}
+                  {
+                    dataOperator.bus_stations_buses_end_pointTobus_stations
+                      ?.name
+                  }
                 </td>
               </tr>
               <tr>
@@ -473,7 +584,7 @@ const BusDetail = () => {
               />
             </div>
           </div>
-        </div> */}
+        </div>
       </div>
     </div>
   );

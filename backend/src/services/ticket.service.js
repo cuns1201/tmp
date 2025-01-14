@@ -49,6 +49,15 @@ const getTicketById = async (tid) => {
     where: {
       id: tid,
     },
+    include: {
+      buses: {
+        include: {
+          bus_operators: true,
+          bus_stations_buses_end_pointTobus_stations: true,
+          bus_stations_buses_start_pointTobus_stations: true,
+        },
+      },
+    },
   });
 };
 

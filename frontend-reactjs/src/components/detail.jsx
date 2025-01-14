@@ -355,7 +355,7 @@ Detail.propTypes = {
     }).isRequired,
     image_url: PropTypes.string.isRequired,
   }).isRequired,
-  averRating: PropTypes.number.isRequired,
+  averRating: PropTypes.string.isRequired,
   userComment: PropTypes.string.isRequired,
 };
 

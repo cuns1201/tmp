@@ -14,7 +14,7 @@ import LoginForm from "./loginForm.jsx";
 import BusList from "./busList.jsx";
 import FillForm from "./fill-form.jsx";
 import BusDetail from "./busDetail.jsx";
-import TicketDetail from "./ticketDetail.jsx";
+import HistoryDetail from "./historyDetail.jsx";
 
 const Navigation = () => {
   const [isLogIn, setIsLogIn] = useState(false);
@@ -85,7 +85,7 @@ const Navigation = () => {
             <Route exact path="/list" element={<BusList />} />
             <Route exact path="/fill-form" element={<FillForm />} />
             <Route exact path="/bus-detail" element={<BusDetail />} />
-            <Route exact path="/ticket-detail" element={<TicketDetail />} />
+            <Route exact path="/history-detail" element={<HistoryDetail />} />
           </Routes>
         </div>
       </BrowserRouter>
