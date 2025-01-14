@@ -26,12 +26,11 @@ function getUrlParameter(name) {
 
 const BusDetail = () => {
   const [isOperator, setIsOperator] = useState(true);
-  const [userComment, setUserComment] = useState("");
   var [dataOperator, setDataOperator] = useState({});
   var maxCommentNum = null;
   var commentPage = 0;
   var commentLimit = 2;
-  var userRating = 1;
+  var [userRating, setUserRating] = useState(1);
   const typeName = ["Limousine", "Normal Seat", "Sleeper Bus"];
 
   const id = getUrlParameter("bus-operator");
@@ -40,9 +39,13 @@ const BusDetail = () => {
   function generateStart(num) {
     let star = "";
     for (let i = 0; i < num; ++i)
-      star += "<i className='text-warning bi bi-star-fill'></i>";
+      star += `<i className='text-warning'>
+      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 576 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M316.9 18C311.6 7 300.4 0 288.1 0s-23.4 7-28.8 18L195 150.3 51.4 171.5c-12 1.8-22 10.2-25.7 21.7s-.7 24.2 7.9 32.7L137.8 329 113.2 474.7c-2 12 3 24.2 12.9 31.3s23 8 33.8 2.3l128.3-68.5 128.3 68.5c10.8 5.7 23.9 4.9 33.8-2.3s14.9-19.3 12.9-31.3L438.5 329 542.7 225.9c8.6-8.5 11.7-21.2 7.9-32.7s-13.7-19.9-25.7-21.7L381.2 150.3 316.9 18z"></path></svg>
+    </i>`;
     for (let i = num; i < 5; ++i)
-      star += "<i className='text-warning bi bi-star'></i>";
+      star += `<i className='text-warning'>
+      <svg stroke="currentColor" fill="currentColor" stroke-width="0" viewBox="0 0 24 24" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="m6.516 14.323-1.49 6.452a.998.998 0 0 0 1.529 1.057L12 18.202l5.445 3.63a1.001 1.001 0 0 0 1.517-1.106l-1.829-6.4 4.536-4.082a1 1 0 0 0-.59-1.74l-5.701-.454-2.467-5.461a.998.998 0 0 0-1.822 0L8.622 8.05l-5.701.453a1 1 0 0 0-.619 1.713l4.214 4.107zm2.853-4.326a.998.998 0 0 0 .832-.586L12 5.43l1.799 3.981a.998.998 0 0 0 .832.586l3.972.315-3.271 2.944c-.284.256-.397.65-.293 1.018l1.253 4.385-3.736-2.491a.995.995 0 0 0-1.109 0l-3.904 2.603 1.05-4.546a1 1 0 0 0-.276-.94l-3.038-2.962 4.09-.326z"></path></svg>
+    </i>`;
     return star;
   }
 
@@ -50,10 +53,14 @@ const BusDetail = () => {
     const commentHTMLTemplate = (email, star, comment) => `
       <hr />
       <div className='clearfix'>
-        <i className='float-start fs-1 bi bi-person-fill fa-5x me-1'></i>
+        <i className='float-start fs-1 me-1'>
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+          </svg>
+        </i>
         <div className='float-start'>
           <div className='fw-bolder'>${email}</div>
-          <div>${star}</div>
+          <div className='flex flex-row'>${star}</div>
           <p className='fw-light fst-italic'>${comment}</p>
         </div>
       </div>`;
@@ -247,8 +254,6 @@ const BusDetail = () => {
       try {
         const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/bus/${id}`);
         const data = await response.json();
-        const userComment = generateComment(data.bus_operators.id);
-        setUserComment(userComment);
         setDataOperator(data);
       } catch (error) {
         console.error("Error:", error);
@@ -323,18 +328,6 @@ const BusDetail = () => {
         });
     }
   };
-  function displayAndStoreUserRating(starID) {
-    const stars = document.querySelectorAll("#rating .bi");
-    stars.forEach((star, index) => {
-      if (index < starID) {
-        star.classList.add("bi-star-fill");
-        star.classList.remove("bi-star");
-      } else {
-        star.classList.add("bi-star");
-        star.classList.remove("bi-star-fill");
-      }
-    });
-  }
 
   return (
     <div className="card">
@@ -450,41 +443,57 @@ const BusDetail = () => {
                 </div>
                 <div className="mb-3 flex justify-center">
                   <span className="float-start flex items-center" id="rating">
-                    <i
-                      className="btn text-warning"
+                    {[...Array(5)].map((_, index) => (
+                      <a
+                        key={index + 1}
+                        type="button"
+                        className="btn text-warning star"
+                        id={index + 1}
+                        onClick={() => setUserRating(index + 1)}
+                      >
+                        {index < userRating ? <FaStar /> : <BiStar />}
+                      </a>
+                    ))}
+                    {/* <a
+                      type="button"
+                      className="btn text-warning star"
                       id="1"
                       onClick={() => displayAndStoreUserRating(1)}
                     >
-                      <FaStar />
-                    </i>
-                    <i
-                      className="btn text-warning"
+                      <BiStar />
+                    </a>
+                    <a
+                      type="button"
+                      className="btn text-warning star"
                       id="2"
                       onClick={() => displayAndStoreUserRating(2)}
                     >
                       <BiStar />
-                    </i>
-                    <i
-                      className="btn text-warning bi bi-star"
+                    </a>
+                    <a
+                      type="button"
+                      className="btn text-warning star"
                       id="3"
                       onClick={() => displayAndStoreUserRating(3)}
                     >
                       <BiStar />
-                    </i>
-                    <i
-                      className="btn text-warning bi bi-star"
+                    </a>
+                    <a
+                      type="button"
+                      className="btn text-warning star"
                       id="4"
                       onClick={() => displayAndStoreUserRating(4)}
                     >
                       <BiStar />
-                    </i>
-                    <i
-                      className="btn text-warning bi bi-star"
+                    </a>
+                    <a
+                      type="button"
+                      className="btn text-warning star"
                       id="5"
                       onClick={() => displayAndStoreUserRating(5)}
                     >
                       <BiStar />
-                    </i>
+                    </a> */}
                   </span>
                   <span className="float-end flex items-center">
                     <button
