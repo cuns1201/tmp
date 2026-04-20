@@ -328,11 +328,6 @@ const Detail = ({ isOperator, dataOperator, averRating, userComment }) => {
   );
 };
 
-
-
-
-
-
 Detail.propTypes = {
   isOperator: PropTypes.bool.isRequired,
   dataOperator: PropTypes.shape({
