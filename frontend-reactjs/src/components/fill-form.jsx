@@ -3,10 +3,10 @@ import { useState } from "react";
 import printJS from "print-js";
 
 const FillForm = () => {
-  // const navigate = useNavigate();
+    // const navigate = useNavigate();
 
-  const [isPayment, setIsPayment] = useState(false);
-  const [isDisabled, setIsDisabled] = useState(true);
+    const [isPayment, setIsPayment] = useState(false);
+    const [isDisabled, setIsDisabled] = useState(true);
 
   const handleCancel = () => {
     window.location.href = window.localStorage.getItem("url");
@@ -35,7 +35,7 @@ const FillForm = () => {
     const email = userInfo.user.email;
     const busId = getUrlParameter("bus-operator");
     console.log("BUSOP", busId);
-    console.log("EMAIL", email, userInfo.token.token);
+    console.log("EMAIL", email);
     const name = document.getElementById("inputFullName").value;
     const phone = document.getElementById("inputPhone").value;
     const numOfSeats = Number(
@@ -67,8 +67,8 @@ const FillForm = () => {
         );
       } else {
         console.log(JSON.stringify(data));
-        document.querySelector("#title p").textContent = "Booking details";
-        const msToTime = (ms) => {
+        document.querySelector("#title div h3").textContent = "Booking details";
+        const msToTime = ms => {
           let seconds = (ms / 1000).toFixed(1);
           let minutes = (ms / (1000 * 60)).toFixed(1);
           let hours = (ms / (1000 * 60 * 60)).toFixed(1);
@@ -78,8 +78,8 @@ const FillForm = () => {
           else if (hours < 24) return hours + " Hours";
           else return days + " Days";
         };
-        const ticketIds = data.ticket_ids.map((tid) => `<li>${tid}</li>`);
-        const template = `<div class='showTable'>
+        const ticketIds = data.ticket_ids.map(tid => `<li>${tid}</li>`);
+        const template = `<div>
             <div id="table">
                 <table class='table table-hover table-striped'>
                 <tbody>
@@ -188,11 +188,11 @@ const FillForm = () => {
                 </tbody>
                 </table>
             </div>
-            <div class=' btnShow'>
-                <button type='button' class=' btnShowForm'>
+            <div class='mt-5 d-flex justify-content-center align-items-center'>
+                <button type='button' class='home-btn btn btn-primary py-3 px-4' style='margin-right: 300px;width: 110px'>
                 Home
                 </button>
-                <button  type='button' class='btnShowForm' >
+                <button id="pay-btn" type='button' class='btn btn-primary py-3 px-4' style='width: 110px'>
                 Pay
                 </button>
             </div>
@@ -241,133 +241,148 @@ const FillForm = () => {
   };
 
   return (
-    <div className="bodyBus">
+    <>
       <div
         id="title"
         className="mt-5 mb-5 card bg-light"
-        style={{
-          height: "150px",
-          display: isDisabled ? "flex" : "none",
-          backgroundColor: "#F8F9FA",
-          textAlign: "center",
-          alignItems: "center",
-          justifyContent: "center",
-        }}
+        style={{ height: "150px", display: isDisabled ? "block" : "none" }}
       >
-        <p style={{ fontSize: "26px", fontWeight: "bold" }}>
-          Fill in booking form
-        </p>
+        <div className="card-body d-flex justify-content-center align-items-center">
+          <h3>Fill in booking form</h3>
+        </div>
       </div>
 
-      <div
-        id="form-container"
-        style={{ display: isDisabled ? "flex" : "none", width: "100%" }}
-      >
-        <form id="form" className="bodyForm">
-          <div className="form-group rowfill">
-            <label htmlFor="inputFullName" className="lableForm">
+      <div id="form-container" style={{ display: isDisabled ? "block" : "none" }}>
+        <form id="form">
+          <div className="form-group row mb-4">
+            <label htmlFor="inputFullName" className="col-sm-2 col-form-label">
               Full Name
             </label>
-            <input
-              required
-              type="text"
-              className="form-control"
-              id="inputFullName"
-              name="inputFullName"
-              placeholder="Full Name"
-              autoFocus
-            />
+            <div className="col-sm-10 d-flex">
+              <input
+                required
+                type="text"
+                className="form-control"
+                id="inputFullName"
+                name="inputFullName"
+                placeholder="Full Name"
+                autoFocus
+              />
+            </div>
           </div>
-
-          <div className="form-group rowfill">
-            <label htmlFor="disabledEmail" className="lableForm">
+          <hr className="my-4" />
+          <div className="form-group row mb-4">
+            <label htmlFor="disabledEmail" className="col-sm-2 col-form-label">
               Email
             </label>
-            <input
-              readOnly
-              type="text"
-              className="form-control bg-secondary text-light"
-              id="disabledEmail"
-              name="disabledEmail"
-              value="example@gmail.com"
-            />
+            <div className="col-sm-10">
+              <input
+                readOnly
+                type="text"
+                className="form-control bg-secondary text-light"
+                id="disabledEmail"
+                name="disabledEmail"
+                value="example@gmail.com"
+              />
+            </div>
           </div>
-
-          <div className="form-group rowfill">
-            <label htmlFor="inputPhone" className="lableForm">
+          <hr className="my-4" />
+          <div className="form-group row mb-4">
+            <label htmlFor="inputPhone" className="col-sm-2 col-form-label">
               Phone
             </label>
-            <input
-              required
-              type="text"
-              className="form-control"
-              id="inputPhone"
-              placeholder="Phone Number"
-              name="inputPhone"
-              pattern="\d+"
-            />
+            <div className="col-sm-10">
+              <input
+                required
+                type="text"
+                className="form-control"
+                id="inputPhone"
+                placeholder="Phone Number"
+                name="inputPhone"
+                pattern="\d+"
+              />
+            </div>
           </div>
-
-          <div className="form-group rowfill">
-            <label htmlFor="disabledStartTime" className="lableForm">
+          <hr className="my-4" />
+          <div className="form-group row">
+            <label
+              htmlFor="disabledStartTime"
+              className="col-sm-2 col-form-label"
+            >
               Start Time
             </label>
-            <input
-              type="text"
-              readOnly
-              className="form-control bg-secondary text-light"
-              id="disabledStartTime"
-              name="disabledStartTime"
-              value="February 11th, 2022 15:00"
-            />
+            <div className="col-sm-10">
+              <input
+                type="text"
+                readOnly
+                className="form-control bg-secondary text-light"
+                id="disabledStartTime"
+                name="disabledStartTime"
+                value="February 11th, 2022 15:00"
+              />
+            </div>
           </div>
-
-          <div className="form-group rowfill">
-            <label htmlFor="disabledEndTime" className="lableForm">
+          <hr className="my-4" />
+          <div className="form-group row">
+            <label
+              htmlFor="disabledEndTime"
+              className="col-sm-2 col-form-label"
+            >
               End Time
             </label>
-            <input
-              type="text"
-              readOnly
-              className="form-control bg-secondary text-light"
-              id="disabledEndTime"
-              name="disabledEndTime"
-              value="February 11th, 2022 20:00"
-            />
+            <div className="col-sm-10">
+              <input
+                type="text"
+                readOnly
+                className="form-control bg-secondary text-light"
+                id="disabledEndTime"
+                name="disabledEndTime"
+                value="February 11th, 2022 20:00"
+              />
+            </div>
           </div>
-
-          <div className="form-group rowfill">
-            <label htmlFor="destination" className="lableForm">
+          <hr className="my-4" />
+          <div className="form-group row">
+            <label htmlFor="destination" className="col-sm-2 col-form-label">
               Destination
             </label>
-            <input
-              type="text"
-              readOnly
-              className="form-control bg-secondary text-light"
-              id="destination"
-              name="destination"
-              value="Hà Nội"
-            />
+            <div className="col-sm-10">
+              <input
+                type="text"
+                readOnly
+                className="form-control bg-secondary text-light"
+                id="destination"
+                name="destination"
+                value="Hà Nội"
+              />
+            </div>
           </div>
-
-          <div className="form-group rowfill">
-            <label htmlFor="inputNumberOfSeat" className="lableForm">
+          <hr className="my-4" />
+          <div className="form-group row mb-4">
+            <label
+              htmlFor="inputNumberOfSeat"
+              className="col-sm-2 col-form-label"
+            >
               Number Of Seats
             </label>
-            <input
-              required
-              type="text"
-              className="form-control"
-              id="inputNumberOfSeat"
-              placeholder="Number of seats"
-              pattern="^\d+$"
-            />
+            <div className="col-sm-10">
+              <input
+                required
+                type="text"
+                className="form-control"
+                id="inputNumberOfSeat"
+                placeholder="Number of seats"
+                pattern="^\d+$"
+              />
+            </div>
           </div>
-          <div className="listBTN">
+          <hr className="my-4" />
+          <div className="mt-5 d-flex justify-content-center align-items-center">
             <button
               id="cancel-btn"
               type="button"
-              className="btnFillFom "
+              className="btn btn-primary py-3 px-4"
+              style={{ marginRight: "300px", width: "110px" }}
               onClick={() => handleCancel()}
             >
               Cancel
@@ -375,7 +390,8 @@ const FillForm = () => {
             <button
               id="submit-btn"
               type="button"
-              className="btnFillFom"
+              className="btn btn-primary py-3 px-4"
+              style={{ width: "110px" }}
               onClick={() => handleSubmitForm()}
             >
               Submit
@@ -384,7 +400,6 @@ const FillForm = () => {
         </form>
       </div>
 
-      {/* ALERT THÔNG BÁO SAU KHI SUBMIT */}
       <div
         style={{
           position: "fixed",
@@ -446,7 +461,7 @@ const FillForm = () => {
           </button>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
