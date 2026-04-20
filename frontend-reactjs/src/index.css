@@ -38,12 +38,65 @@ body {
   min-height: 100vh;
   width: 100%;
 }
+.bodyBus{
+  width: 100%;
+  padding: 50px 120px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+}
 
 h1 {
   font-size: 3.2em;
   line-height: 1.1;
 }
+.btnLogin{
+  background-color: #7749F8;
+  color: white;
+  border: none;
+  padding: 6px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.formSearch{
+  padding: 20px 40px;
+  border-radius: 5px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  /* align-items: center; */
+}
+.f1{
+  width: 100%;
+}
+.react-datepicker-wrapper{
+  width: calc(100% - 45px);
+}
+.custom-datepicker {
+  width: 100%;
+  /* width: calc(100% - 45px) ; */
+  border-radius: 5px;
+  border: 1px solid #d5d7d7;
+  outline: none;
+  background-color: #ffffff;
+  /* Thêm các thuộc tính CSS khác nếu cần */
+}
 
+.setDate{
+  width: 100%;
+  display: flex;
+  gap: 2px;
+  justify-content: space-between;
+  align-items: center;
+}
+.btnLogin:hover{
+  background-color: rgb(51, 184, 56);
+  color: white;
+}
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -81,20 +134,24 @@ button.ghost {
   border-color: #FFFFFF;
 }
 
-form {
-  background-color: #FFFFFF;
+
+.form-check{
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-direction: column;
-  padding: 0 50px;
-  height: 100%;
-  text-align: center;
+  width: 50%;
 }
-
+.form-check input{
+  width: 15px;
+  height: 15px;
+  margin-right: 10px;
+}
+.form-check-label{
+  white-space: nowrap;
+}
 input {
   background-color: #eee;
   border: none;
+  outline: none;
   padding: 12px 15px;
   margin: 8px 0;
   width: 100%;
@@ -119,8 +176,13 @@ p {
   max-width: 100%;
   min-height: 480px;
 }
-
+#form-container{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .form-container {
+ 
   position: absolute;
   top: 0;
   height: 100%;
@@ -259,15 +321,502 @@ p {
   }
 }
 
-.list-of-buses {
-  width: 650px;
+.mainBody{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  /* gap: 10px; */
 }
+.mainLeft{
+  width: 30%;
+}
+.card{
+  width: 100%;
+  border-radius: 3px;
+  border: 1px solid #DEE2E6;
+}
+.card-body{
+  display: flex;
+  flex-direction: column;
+  padding: 10px 20px;
+}
+.card-header{
+  padding: 10px 20px;
+  background-color: #F8F9FA;
+  font-size: 18px;
+  font-weight: bold;
+  /* border-bottom: 1px solid #DEE2E6; */
+}
+.mainRight{
+  width: 65%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.list-of-buses{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+.loadMore{
+  padding: 10px 20px; border:2px solid #7749F8; cursor:pointer; border-radius:5px;
+}
+.loadMore:hover{
+  background-color: #149227;
+  color: white;
+  /* border: none; */
+}
+.ticket-body{
+  border: 1px solid #DEE2E6;
+  border-radius: 5px;
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 15px;
+}
+
+
+.colLeft{
+  width: 35%;
+  height: 179px;
+}
+.colLeft img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.colRight{
+  width: 60%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  /* gap: 3px; */
+}
+.row1{
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin: 0;
+}
+.row1Left{
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+.nameBus{
+  font-size: 24px;
+  font-weight: bold;
+}
+.row1Left .operatingBus{
+  background-color: #FFC107;
+  color: black;
+  font-weight: bold;
+  padding: 5px 20px;
+  border-radius: 20px;
+}
+.row1Right{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  /* gap: 5px; */
+}
+.row2{
+  margin: 0;
+  width: 70%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.row2Col1, .row2Col2{
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.time{
+  font-size: 18px;
+  font-weight: bold;
+  color: #EB7878;
+}
+.date{
+  font-size: 12px;
+  font-weight: 400;
+  color: #E57676;
+}
+.locat{
+  font-size: 14px;
+  font-weight: bold;
+  color: #E57676;
+}
+
+.row3{
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+
 
 .bus-detail {
   display: flex;
   flex-direction: row;
 }
 
+
+form {
+  background-color: #FFFFFF;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  padding: 0 50px;
+  height: 100%;
+  text-align: center;
+}
+/* FORM FILL  */
+.bodyForm{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 10px;
+}
+.rowfill{
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 0px;
+  border-bottom: 2px solid #DEE2E6;
+}
+.rowfill input{
+  width: 90%;
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #DEE2E6;
+}
+.lableForm{
+  width: 7%;
+  padding: 5px 20px;
+  padding-left: 0px;
+  font-size: 18px;
+  font-weight: bold;
+}
+.listBTN{
+  margin-top: 10px;
+  display: flex;
+  justify-content: center;
+  gap: 60px;
+}
+.btnFillFom{
+  background-color: #7749F8;
+  color: white;
+  border: none;
+  padding: 6px 20px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btnFillFom:hover{
+  background-color: rgb(51, 184, 56);
+  color: white;
+}
+
+/* Form sau khi submit */
+.btnShow{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px;
+}
+.btnShowForm{
+  width: 120px;
+  background-color: #7749F8;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+.btnShowForm:hover{
+  background-color: rgb(51, 184, 56);
+  color: white;
+}
+#table {
+  width: 100%;
+
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* CSS cho các ô trong bảng */
+#table th,
+#table td {
+  border: 1px solid #dee2e6;
+  padding: 8px;
+}
+
+/* CSS cho tiêu đề của bảng */
+#table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+
+/* CSS cho các hàng trong bảng */
+#table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+
+/* CSS cho các ô có lớp 'align-middle' */
+.align-middle {
+  vertical-align: middle;
+}
+
+/* CSS cho các ô có lớp 'ps-4' */
+.ps-4 {
+  padding-left: 1.5rem;
+}
+
+/* CSS cho các ô có lớp 'quarter-width' */
+.quarter-width {
+  width: 25%;
+}
+
+/* CSS cho danh sách có kiểu đĩa */
+.disc-list-style-type {
+  list-style-type: disc;
+  padding-left: 20px;
+}
+
+/* CSS cho các nút */
+
+.mt-5 {
+  margin-top: 3rem;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.justify-content-center {
+  justify-content: center;
+}
+
+.align-items-center {
+  align-items: center;
+}
+
+
+/* BUS DETAIL */
+/* CSS cho card-header */
+.cardDetail-header{
+  width: 100%;
+  padding: 60px 129px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 20px; /* Khoảng cách giữa các phần tử */
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+
+
+/* CSS cho các nút */
+.nav-link {
+  width: 200px;
+  font-size: 16px;
+  color: #000;
+  background-color: #fff;
+  border: 1px solid #dee2e6;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.nav-link.active {
+  background-color: #007bff;
+  color: #fff;
+}
+
+.nav-link:hover {
+  background-color: #e9ecef;
+}
+
+
+/* CSS cho nút đóng */
+.btn-close{
+  width: 250px;
+  background-color: #dc3545;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn-close:hover {
+  background-color: #23c831;
+}
+
+.tab-content{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+.cardInforBody{
+  width: 100%;
+  padding: 20px 127px;
+}
+.inforBus{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 40px;
+}
+.inforBus .nameBus{
+  font-size: 32px;
+  font-weight: bold;
+}
+.inforImage{
+  width: 100%;
+  height: 400px;
+}
+.inforImage img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.contactBus span{
+  display: inline-block;
+}
+.contactBus{
+  width: 60%;
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+  align-items: center;
+}
+.inforRating{
+  padding: 10px 25px;
+  background-color: #FFC107;
+  border-radius: 15px;
+  color: black;
+  font-weight: bold;
+  font-size: 18px;
+}
+#user_comment{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.commentUser{
+  width: 40%;
+  display: flex;
+  flex-direction: row;
+  /* justify-content: center; */
+  align-items: flex-start;
+  gap: 20px;
+  padding: 20px;
+  padding-bottom: 0px;
+  border-top: 2px solid #0a3d6f;
+}
+.detailCmt{
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.detailCmt .nameUser{
+  font-size: 23px;
+  font-weight: bold;
+}
+.ratingUser{
+  display: flex;
+  gap: 5px;
+  color: #FFC107;
+  font-size: 25px;
+}
+.detailCmt .contentCmt{
+  font-size: 18px;
+  font-style: italic;
+}
+/* CSS cho phần chuyển hướng trang */
+.page-navigation {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 40px; /* Khoảng cách giữa các nút */
+  margin-top: 20px;
+}
+
+.page-link {
+  width: 120px;
+  font-size: 16px;
+  color: #fff;
+  background-color: #007bff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.page-link:hover {
+  background-color: #0056b3;
+}
+
+.page-link:disabled {
+  background-color: #6c757d;
+  cursor: not-allowed;
+}
+.space{
+  width: 100%;
+  height: 2px;
+  background-color: #DEE2E6;
+  margin: 20px 0px;
+}
+.formComment{
+  padding: 0px;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin: 15px;
+}
+.formComment textarea{
+  width: 100%;
+  padding: 30px;
+  border-radius: 5px;
+  border: 1px solid #DEE2E6;
+  margin-bottom: 20px;
+}
+.selectedCmt{
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+.fillStart{
+  color: #FFC107;
+  font-size: 30px;
+  cursor: pointer;
+}
+.fillStart:hover{
+  color: #FFC107;
+}
 /* Photo Detail */
 .photo-detail {
   position: fixed;
@@ -276,6 +825,84 @@ p {
   height: 98%;
 }
 
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 20px 0;
+  font-size: 16px;
+  text-align: left;
+}
+
+/* CSS cho các ô trong bảng */
+.table td {
+  border: 1px solid #dee2e6;
+  padding: 8px;
+}
+
+/* CSS cho các tiêu đề của bảng */
+.table .fst-italic {
+  font-weight: bold;
+  background-color: #f8f9fa;
+}
+ .s1{
+  margin: 150px 0px;
+}
+.showImage{
+  width: 50%;
+  margin-bottom: 50px;
+}
+.showImage img{
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+/* CSS cho các hàng trong bảng */
+.table tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+.toBTN2{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+
+/* CSS FOR HISTORY */
+.table thead th {
+  border-top: 2px solid #dee2e6;
+  border-right: 2px solid #dee2e6;
+  padding: 8px;
+  text-align: left;
+  background-color: #f8f9fa;
+  font-weight: bold;
+}
+tr th{
+  border-top: 1px solid #dee2e6;
+  padding: 10px;
+}
+.history-list{
+  width: 100%;
+  padding: 20px 127px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.titleHis{
+  width: 100%;
+  font-size: 24px;
+  font-weight: bold;
+  padding: 50px 0px;
+  text-align: center;
+  background-color: #F8F9FA;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.bodyHis{
+  width: 100%;
+  margin: 30px 0px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
 .detail-container {
   width: 100%;
   height: 100%;
@@ -285,6 +912,8 @@ p {
   align-items: center;
   border-radius: 5px;
 }
+
+
 
 /* Photo Detail Overlay*/
 .photo-detail-overlay {

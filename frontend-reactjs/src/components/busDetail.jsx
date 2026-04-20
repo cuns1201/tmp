@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
 import { BiStar } from "react-icons/bi";
 import { FaStar } from "react-icons/fa6";
-
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+// import { faUser } from "@fortawesome/free-solid-svg-icons";
 function secondsToHms(d) {
   d = Number(d);
   var h = Math.floor(d / 3600);
@@ -51,31 +53,33 @@ const BusDetail = () => {
 
   async function generateComment(bo_id) {
     const commentHTMLTemplate = (email, star, comment) => `
-      <hr />
-      <div className='clearfix'>
-        <i className='float-start fs-1 me-1'>
-          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
-            <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
-          </svg>
-        </i>
-        <div className='float-start'>
-          <div className='fw-bolder'>${email}</div>
-          <div className='flex flex-row'>${star}</div>
-          <p className='fw-light fst-italic'>${comment}</p>
-        </div>
-      </div>`;
+    <hr>
+    <div class="commentUser">
+    <i class="float-start imageUser">
+      <svg xmlns="http://www.w3.org/2000/svg" width="60" height="60" fill="currentColor" class="bi bi-person-fill" viewBox="0 0 16 16">
+        <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6"/>
+      </svg>
+    </i>
+    <div class="float-start detailCmt">
+      <div class="fw-bolder nameUser">${email}</div>
+      <div class="flex flex-row ratingUser">${star}</div>
+      <p class="fw-light fst-italic contentCmt">${comment}</p>
+    </div>
+  </div>`;
 
     let commentContent = "";
     try {
-      let response = await fetch(`${
-        import.meta.env.VITE_BACKEND_URL
-      }/bus-operator/review/${bo_id}/${commentPage}/${commentLimit}`);
+      let response = await fetch(
+        `${
+          import.meta.env.VITE_BACKEND_URL
+        }/bus-operator/review/${bo_id}/${commentPage}/${commentLimit}`
+      );
       let data = await response.json();
-      if (maxCommentNum == null || maxCommentNum < data.count){
+      if (maxCommentNum == null || maxCommentNum < data.count) {
         maxCommentNum = data.count;
       }
       if (data.data.length > 0) {
-        data.data.forEach(item => {
+        data.data.forEach((item) => {
           commentContent += commentHTMLTemplate(
             item.users.email,
             generateStart(item.rate),
@@ -86,7 +90,7 @@ const BusDetail = () => {
     } catch (error) {
       alert("Error", JSON.stringify(error));
     }
-    
+
     // fetch(
     //   `${
     //     import.meta.env.VITE_BACKEND_URL
@@ -123,136 +127,14 @@ const BusDetail = () => {
     console.log("commentContent: ", commentContent);
     return commentContent;
   }
-
-  // function displayAndStoreUserRating(starID) {
-  //   const stars = document.querySelectorAll("#rating .bi");
-  //   stars.forEach((star, index) => {
-  //     if (index < starID) {
-  //       star.classList.add("bi-star-fill");
-  //       star.classList.remove("bi-star");
-  //     } else {
-  //       star.classList.add("bi-star");
-  //       star.classList.remove("bi-star-fill");
-  //     }
-  //   });
-  // }
-
-  // const typeName = ["Limousine", "Normal Seat", "Sleeper Bus"];
-  // const template = (data, userComment) => `
-  //   <div className='tab-pane fade show active' id='pills-bus-operator' role='tabpanel'
-  //   aria-labelledby='pills-bus-operator-tab' tabindex='0'>
-  //   <div className='p-4 col'>
-  //     <div className='h3 text-center mw-50'>Nhà xe ${data.bus_operators.name}</div>
-  //     <div className='d-flex justify-content-center'>
-  //     <img className='img-fluid' src='${
-  //       data.bus_operators.image_url
-  //     }' alt='Nhà xe' />
-  //     </div>
-  //     <div>
-  //     <span className='fst-italic fw-lighter'> Phone number: </span>
-  //     <span className='fw-bolder'> ${data.bus_operators.phone} </span>
-  //     <span className='float-end'>
-  //       <span className='badge rounded-pill bg-warning text-dark'>
-  //       <i className='bi bi-star-fill'></i>
-  //       ${averRating}
-  //       </span>
-  //     </span>
-  //     </div>
-  //     <div id="user_comment">${userComment}</div>
-  //     <nav className='mt-5' aria-label='Page navigation example'>
-  //     <ul className='pagination justify-content-center'>
-  //       <li className='page-item'>
-  //       <a className='page-link' href='#' id='Previous'>Previous</a>
-  //       </li>
-  //       <li className='page-item'>
-  //       <a className='page-link' href='#' id='Next'>Next</a>
-  //       </li>
-  //     </ul>
-  //     </nav>
-  //     <hr />
-  //     <form className='row g-3' id="user_review">
-  //     <div className='form-floating'>
-  //       <textarea className='form-control' placeholder='Leave a comment here' id='floatingTextarea2'
-  //       style='height: 150px; resize: none' required></textarea>
-  //       <label className='text-muted' for='floatingTextarea2'>Your Comments.</label>
-  //     </div>
-  //     <div>
-  //       <span className='float-start' id="rating">
-  //       <i className='btn text-warning bi bi-star-fill' id='1' onClick={() => displayAndStoreUserRating(1)}></i>
-  //       <i className='btn text-warning bi bi-star' id='2' onClick={() => displayAndStoreUserRating(2)}></i>
-  //       <i className='btn text-warning bi bi-star' id='3' onClick={() => displayAndStoreUserRating(3)}></i>
-  //       <i className='btn text-warning bi bi-star' id='4' onClick={() => displayAndStoreUserRating(4)}></i>
-  //       <i className='btn text-warning bi bi-star' id='5' onClick={() => displayAndStoreUserRating(5)}></i>
-  //       </span>
-  //       <span className='float-end'>
-  //       <button type='submit' className='btn btn-primary mb-3'>Submit</button>
-  //       </span>
-  //     </div>
-  //     </form>
-  //   </div>
-  //   </div>
-  //   <div className='tab-pane fade' id='pills-bus-information' role='tabpanel'
-  //   aria-labelledby='pills-bus-information-tab' tabindex='0'>
-  //   <div className='p-4 col'>
-  //     <table className='table table-borderless'>
-  //     <tr>
-  //       <td className='fst-italic' style='width: 60%'>Bus operator</td>
-  //       <td className='text-primary'>${data.bus_operators.name}</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>Start point</td>
-  //       <td className='text-primary'>${
-  //         data.bus_stations_buses_start_pointTobus_stations.name
-  //       }</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>End point</td>
-  //       <td className='text-primary'>${
-  //         data.bus_stations_buses_end_pointTobus_stations.name
-  //       }</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>Start time</td>
-  //       <td className='text-primary'>${data.start_time}</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>End time</td>
-  //       <td className='text-primary'>${data.end_time}</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>Duration</td>
-  //       <td className='text-primary'>${secondsToHms(
-  //         (new Date(data.end_time) - new Date(data.start_time)) / 1000
-  //       )}</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>Policy</td>
-  //       <td className='text-primary' id="policy">${data.policy}</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>Number of seats</td>
-  //       <td className='text-primary'>${data.num_of_seats}</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>Type of bus</td>
-  //       <td className='text-primary'>${typeName[data.type]}</td>
-  //     </tr>
-  //     <tr>
-  //       <td className='fst-italic'>Cost</td>
-  //       <td className='text-primary'>${data.price} vnđ</td>
-  //     </tr>
-  //     </table>
-  //     <hr />
-  //     <div className='d-flex justify-content-center'>
-  //     <img className='img-fluid' src='${data.image_url}' alt='Xe' />
-  //     </div>
-  //   </div>
-  //   </div>`;
+  // CMT1
 
   useEffect(() => {
     const getDataOperator = async () => {
       try {
-        const response = await fetch(`${import.meta.env.VITE_BACKEND_URL}/bus/${id}`);
+        const response = await fetch(
+          `${import.meta.env.VITE_BACKEND_URL}/bus/${id}`
+        );
         const data = await response.json();
         setDataOperator(data);
       } catch (error) {
@@ -265,19 +147,20 @@ const BusDetail = () => {
 
   useEffect(() => {
     if (Object.keys(dataOperator).length > 0) {
-      generateComment(dataOperator.bus_operators?.id).then(commentContent => {
-        document.getElementById("user_comment").innerHTML = commentContent;
-      })
-      .catch(error => {
-        console.error("Error generating comment:", error);
-      });
+      generateComment(dataOperator.bus_operators?.id)
+        .then((commentContent) => {
+          document.getElementById("user_comment").innerHTML = commentContent;
+        })
+        .catch((error) => {
+          console.error("Error generating comment:", error);
+        });
     }
   }, [dataOperator]);
 
   const handleSwitch = (bool) => {
     bool ? setIsOperator(true) : setIsOperator(false);
   };
-  const handleSubmitComment = id => {
+  const handleSubmitComment = (id) => {
     const userInfo = JSON.parse(localStorage.getItem("userInfo"));
     fetch(
       `${import.meta.env.VITE_BACKEND_URL}/bus-operator/review/create/${id}`,
@@ -294,235 +177,193 @@ const BusDetail = () => {
         }),
       }
     )
-      .then(response => response.json())
-      .then(data => {
+      .then((response) => response.json())
+      .then((data) => {
         console.log("dataReview: ", data);
         document.getElementById("floatingTextarea2").value = "";
         alert("Success");
       })
-      .catch(error => {
+      .catch((error) => {
         alert("Error", JSON.stringify(error));
       });
   };
-  const handlePrevious = id => {
+  const handlePrevious = (id) => {
     if (commentPage > 0) {
       commentPage--;
       generateComment(id)
-        .then(commentContent => {
+        .then((commentContent) => {
           document.getElementById("user_comment").innerHTML = commentContent;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error generating comment:", error);
         });
     }
   };
-  const handleNext = id => {
+  const handleNext = (id) => {
     if (commentPage < Math.floor(maxCommentNum / commentLimit) - 1) {
       commentPage++;
       generateComment(id)
-        .then(commentContent => {
+        .then((commentContent) => {
           document.getElementById("user_comment").innerHTML = commentContent;
         })
-        .catch(error => {
+        .catch((error) => {
           console.error("Error generating comment:", error);
         });
     }
   };
 
+  const [activeTab, setActiveTab] = useState("operator");
+
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    handleSwitch(tab === "operator");
+  };
+
   return (
-    <div className="card">
-      <div className="card-header">
-        <h1 className="card-title fs-6">
-          <ul className="nav nav-pills mb-3" id="pills-tab" role="tablist">
-            <li className="nav-item" role="presentation">
-              <button
-                className="nav-link active"
-                id="pills-bus-operator-tab"
-                data-bs-toggle="pill"
-                data-bs-target="#pills-bus-operator"
-                type="button"
-                role="tab"
-                aria-controls="pills-bus-operator"
-                aria-selected="true"
-                onClick={() => handleSwitch(true)}
-              >
-                Bus operator
-              </button>
-            </li>
-            <li className="nav-item" role="presentation">
-              <button
-                className="nav-link"
-                id="pills-bus-information-tab"
-                data-bs-toggle="pill"
-                data-bs-target="#pills-bus-information"
-                type="button"
-                role="tab"
-                aria-controls="pills-bus-information"
-                aria-selected="false"
-                onClick={() => handleSwitch(false)}
-              >
-                Bus information
-              </button>
-            </li>
-          </ul>
-        </h1>
-        <button type="button" className="btn-close" aria-label="Close"></button>
+    <div className="card" style={{ width: "100%" }}>
+      <div className="cardDetail-header">
+        <button
+          className={`nav-link ${activeTab === "operator" ? "active" : ""}`}
+          id="pills-bus-operator-tab"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-bus-operator"
+          type="button"
+          role="tab"
+          aria-controls="pills-bus-operator"
+          aria-selected={activeTab === "operator"}
+          onClick={() => handleTabClick("operator")}
+        >
+          Bus operator
+        </button>
+        <button
+          className={`nav-link ${activeTab === "information" ? "active" : ""}`}
+          id="pills-bus-information-tab"
+          data-bs-toggle="pill"
+          data-bs-target="#pills-bus-information"
+          type="button"
+          role="tab"
+          aria-controls="pills-bus-information"
+          aria-selected={activeTab === "information"}
+          onClick={() => handleTabClick("information")}
+        >
+          Bus information
+        </button>
+        <button type="button" className="btn-close" aria-label="Close">
+          Close
+        </button>
       </div>
-      <div className="card-body">
+      <div className="cardInforBody">
         <div
           className="tab-content"
           id="pills-tabContent"
-          style={{ display: isOperator ? "block" : "none" }}
+          style={{ display: isOperator ? "flex" : "none" }}
         >
-          <div
-            className="tab-pane fade show active"
-            id="pills-bus-operator"
-            role="tabpanel"
-            aria-labelledby="pills-bus-operator-tab"
-          >
-            <div className="p-4 col">
-              <div className="h3 text-center mw-50">
-                Nhà xe {dataOperator.bus_operators?.name}
-              </div>
-              <div className="d-flex justify-content-center">
-                <img
-                  className="img-fluid"
-                  src={dataOperator.bus_operators?.image_url}
-                  alt="Nhà xe"
-                />
-              </div>
-              <div>
-                <span className="fst-italic fw-lighter"> Phone number: </span>
-                <span className="fw-bolder">
+          <div className="inforBus">
+            <h3 className="nameBus">
+              {" "}
+              Nhà xe {dataOperator.bus_operators?.name}
+            </h3>
+            <div className="inforImage">
+              <img
+                className=""
+                src={dataOperator.bus_operators?.image_url}
+                alt="Nhà xe"
+              />
+            </div>
+            <div className="contactBus">
+              <span
+                className="infoPhone"
+                style={{ fontSize: "23px", fontWeight: "300" }}
+              >
+                Phone number:
+                <span
+                  className="phoneBus"
+                  style={{
+                    fontSize: "23px",
+                    fontWeight: "bold",
+                    padding: "0px 10px",
+                  }}
+                >
                   {dataOperator.bus_operators?.phone}
                 </span>
-                <span className="float-end">
-                  <span className="badge rounded-pill bg-warning text-dark">
-                    <i className="bi bi-star-fill"></i>
-                    {averRating}
-                  </span>
-                </span>
-              </div>
-              <div id="user_comment"></div>
-              <nav className="mt-5" aria-label="Page navigation example">
-                <ul className="pagination justify-content-center">
-                  <li className="page-item">
-                    <button
-                      type="button"
-                      className="page-link"
-                      id="Previous"
-                      onClick={() =>
-                        handlePrevious(dataOperator.bus_operators?.id)
-                      }
-                    >
-                      Previous
-                    </button>
-                  </li>
-                  <li className="page-item">
-                    <button
-                      type="button"
-                      className="page-link"
-                      id="Next"
-                      onClick={() => handleNext(dataOperator.bus_operators?.id)}
-                    >
-                      Next
-                    </button>
-                  </li>
-                </ul>
-              </nav>
-              <hr />
-              <form className="row g-3" id="user_review">
-                <div className="form-floating">
-                  <textarea
-                    className="form-control"
-                    placeholder="Your Comments"
-                    id="floatingTextarea2"
-                    style={{ height: "150px", resize: "none" }}
-                    required
-                  ></textarea>
-                </div>
-                <div className="mb-3 flex justify-center">
-                  <span className="float-start flex items-center" id="rating">
-                    {[...Array(5)].map((_, index) => (
-                      <a
-                        key={index + 1}
-                        type="button"
-                        className="btn text-warning star"
-                        id={index + 1}
-                        onClick={() => setUserRating(index + 1)}
-                      >
-                        {index < userRating ? <FaStar /> : <BiStar />}
-                      </a>
-                    ))}
-                    {/* <a
-                      type="button"
-                      className="btn text-warning star"
-                      id="1"
-                      onClick={() => displayAndStoreUserRating(1)}
-                    >
-                      <BiStar />
-                    </a>
-                    <a
-                      type="button"
-                      className="btn text-warning star"
-                      id="2"
-                      onClick={() => displayAndStoreUserRating(2)}
-                    >
-                      <BiStar />
-                    </a>
-                    <a
-                      type="button"
-                      className="btn text-warning star"
-                      id="3"
-                      onClick={() => displayAndStoreUserRating(3)}
-                    >
-                      <BiStar />
-                    </a>
-                    <a
-                      type="button"
-                      className="btn text-warning star"
-                      id="4"
-                      onClick={() => displayAndStoreUserRating(4)}
-                    >
-                      <BiStar />
-                    </a>
-                    <a
-                      type="button"
-                      className="btn text-warning star"
-                      id="5"
-                      onClick={() => displayAndStoreUserRating(5)}
-                    >
-                      <BiStar />
-                    </a> */}
-                  </span>
-                  <span className="float-end flex items-center">
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleSubmitComment(dataOperator.bus_operators?.id)
-                      }
-                      className="btn btn-primary"
-                    >
-                      Submit
-                    </button>
-                  </span>
-                </div>
-              </form>
+              </span>
+              <span className="inforRating">
+                {averRating} <FontAwesomeIcon icon={faStar} />
+              </span>
             </div>
           </div>
+
+          <div id="user_comment"></div>
+
+          <nav className="page-navigation" aria-label="Page navigation example">
+            <button
+              type="button"
+              className="page-link"
+              id="Previous"
+              onClick={() => handlePrevious(dataOperator.bus_operators?.id)}
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              className="page-link"
+              id="Next"
+              onClick={() => handleNext(dataOperator.bus_operators?.id)}
+            >
+              Next
+            </button>
+          </nav>
+          <div className="space"></div>
+          {/* Comment */}
+          <form className="formComment" id="user_review">
+            <textarea
+              className="form-control formCmt"
+              placeholder="Your Comments"
+              id="floatingTextarea2"
+              style={{ height: "150px", resize: "none", outline: "none" }}
+              required
+            ></textarea>
+            <div className="selectedCmt">
+              <span className="float-start flex items-center" id="rating">
+                {[...Array(5)].map((_, index) => (
+                  <a
+                    key={index + 1}
+                    type="button"
+                    className="btn fillStart text-warning star"
+                    id={index + 1}
+                    onClick={() => setUserRating(index + 1)}
+                  >
+                    {index < userRating ? <FaStar /> : <BiStar />}
+                  </a>
+                ))}
+              </span>
+              <span className="float-end flex items-center">
+                <button
+                  type="button"
+                  onClick={() =>
+                    handleSubmitComment(dataOperator.bus_operators?.id)
+                  }
+                  className="btnFillFom"
+                >
+                  Submit
+                </button>
+              </span>
+            </div>
+          </form>
         </div>
 
+        {/* DETAiL BUS */}
         <div
           className="tab-pane fade"
           id="pills-bus-information"
           role="tabpanel"
           aria-labelledby="pills-bus-information-tab"
-          style={{ display: isOperator ? "none" : "block" }}
+          style={{ display: isOperator ? "none" : "flex" }}
         >
-          <div className="p-4 col">
+          <div className="toBTN2">
             <table className="table table-borderless">
               <tr>
-                <td className="fst-italic" style={{ width: "60%" }}>
+                <td className="fst-italic" style={{ width: "30%" }}>
                   Bus operator
                 </td>
                 <td className="text-primary">
@@ -584,13 +425,9 @@ const BusDetail = () => {
                 <td className="text-primary">{dataOperator.price} vnđ</td>
               </tr>
             </table>
-            <hr />
-            <div className="d-flex justify-content-center">
-              <img
-                className="img-fluid"
-                src={dataOperator.image_url}
-                alt="Xe"
-              />
+            <div className="space s1"></div>
+            <div className="showImage">
+              <img className="" src={dataOperator.image_url} alt="Xe" />
             </div>
           </div>
         </div>
